@@ -10,8 +10,9 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.22.1")
+		classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.22.1')
 	}
+
 }
 
 plugins {
@@ -27,7 +28,7 @@ sourceCompatibility = '17'
 
 bootJar {
 	baseName = 'curso_aws_project01'
-	version = '1.5.0'
+	version =  '2.0.0'
 }
 
 task unpack(type: Copy) {
@@ -35,13 +36,13 @@ task unpack(type: Copy) {
 	from(zipTree(tasks.bootJar.outputs.files.singleFile))
 	into("build/dependency")
 }
-
 docker {
 	name "${project.group}/${bootJar.baseName}"
 	tags "${bootJar.version}"
 	copySpec.from(tasks.unpack.outputs).into("dependency")
 	buildArgs(['DEPENDENCY': "dependency"])
 }
+
 
 repositories {
 	mavenCentral()
@@ -52,6 +53,10 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	implementation group: 'com.amazonaws', name: 'aws-java-sdk-sns', version: '1.12.132'
+
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.4'
 
